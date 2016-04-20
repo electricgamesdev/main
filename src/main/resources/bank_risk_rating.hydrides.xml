@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hydrides path="bank_risk_rating">
+	<domain  type="flume">
+		<source path="sources/cards_dataset" link="file_processing.conf">
+			<workflow ref="cards_flow" />
+		</source>
+		<source path="sources/loans_dataset" link="file_processing.conf">
+			<workflow ref="loans_flow" />
+		</source>
+	</domain>
+	<layout type="html">
+		<component path="components/profiling_summary" link="dpf_summary.html">
+			<workflow ref="loans_flow" />
+		</component>
+		<component path="components/issue_summary" link="issue_summary.html">
+			<workflow ref="cards_flow" />
+			<workflow ref="loans_flow" />
+		</component>
+		<component path="components/processing_summary" link="dpf_summary.html">
+			<workflow ref="cards_flow" />
+			<workflow ref="loans_flow" />
+		</component>
+	</layout>
+	<pipeline type="drools">
+		<workflow path="workflows/cards_profiling" link="integrity.xsl" as="cards_flow"/>
+		<workflow path="workflows/loans_profiling" link="integrity.xsl" as="loans_flow"/>
+	</pipeline>
+</hydrides>

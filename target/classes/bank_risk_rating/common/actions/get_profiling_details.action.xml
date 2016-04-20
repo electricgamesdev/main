@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action>
+	<task>
+		<entity ref="file_error" as="error" />
+		<result>
+			<form ref="summary" />
+		</result>
+	</task>
+</action>

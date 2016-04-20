@@ -1,0 +1,8 @@
+package com.hydrogen.drool
+
+rule "Integrity Check"
+when
+    $a : Record( get('age') > 18 )
+then
+    $a.put('age_valid',true );
+end

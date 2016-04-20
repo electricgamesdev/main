@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity pattern="[a-b]_ctl_[0-9]_[0-9].ctl">
+	<field name="file_name" type="string" format="[]" value-by-header="" required="true"/>
+	<field name="record_count" type="number" format="[]" value-by-header="" required="true"/>
+	<field name="checksum" type="number" format="[]" value-by-header="" required="true"/>
+	<field name="country" type="string" value-by-header="" required="true" partition-key="true">
+		<field name="country_codes" entity="common/entity/cty_prod_bu"/>
+	</field>
+	<field name="reporting_period" type="number" value-by-header="" required="true" partition-key="true"/>
+</entity>

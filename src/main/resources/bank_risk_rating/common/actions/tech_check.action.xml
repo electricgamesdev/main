@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action>
+	<task type="left-join" as="def">
+		<execute>
+			<entity ref="act" as="act_count_sum">
+				<function as="ct">count ( account_numer )</function>
+				<function as="sm">sum ( account_number )</function>
+				<group-by>account_numer,reporting_period</group-by>
+			</entity>
+			<entity ref="ctl" as="act_ctl">
+				<filter-by>filetype='ACT'</filter-by>
+			</entity>
+			<condition>act.ct=act_ctl.recordcount and act_ctl.checksum!=act.sm
+			</condition>
+		</execute>
+		<result>
+			<entity ref="file_errors" mode="append">
+				<field name="checkType">Record Count and Checksum</field>
+				<field name="expectedValue">
+					<field name="recordcount" entity="act_ctl" />
+				</field>
+				<field name="receivedValue">
+					<field ref="ct" entity="act_count_sum" />
+				</field>
+				<field name="status">Failed</field>
+			</entity>
+		</result>
+	</task>
+</action>

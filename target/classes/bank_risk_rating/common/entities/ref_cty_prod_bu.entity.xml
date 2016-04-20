@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity>
+	<field name="country" type="map">
+		<value name="IN">India</value>
+		<value name="US">USA</value>
+	</field>
+	<field name="product" type="map">
+		<value name="CRD">Cards</value>
+		<value name="LNS">Loans</value>
+	</field>
+	<field name="bunit" type="map">
+		<value name="RET">Retail</value>
+		<value name="ENT">Enterprise</value>
+	</field>
+	
+</entity>

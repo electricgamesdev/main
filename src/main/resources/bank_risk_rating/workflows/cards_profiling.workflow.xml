@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow>
+	<action path="common/actions/tech_check" as="tech_check" type="start">
+		<entity path="common/entities/file_errors" as="file_errors"/>
+	</action>
+	<action path="common/actions/business_check" as="business_check" depends-on="tech_check">
+		<entity path="common/entities/attr_errors" as="attr_errors"/>
+		<rules path="common/rules/business_rules" as="business_rules"/>
+	</action>
+	<action path="common/actions/outlier_check" as="outlier_check" depends-on="tech_check">
+		<entity path="common/entities/attr_errors" as="attr_errors"/>
+		<rules path="common/rules/business_rules" as="business_rules">
+			<event rule="date_check" type="success">
+			
+			</event>
+		</rules>
+	</action>
+	<action path="common/actions/get_profiling_details" type="end" >
+		<entity path="common/entities/file_errors" as="file_errors"/>
+		<entity path="common/entities/attr_errors" as="attr_errors"/>
+		<form path="common/forms/profiling_summary" as="result"/>
+	</action>
+</workflow>
