@@ -14,25 +14,27 @@ import com.hydrogen.jpa.DBUtil;
 import com.hydrogen.stage.Stage;
 import com.hydrogen.stage.Validation;
 
-public class ValidationWorker extends Worker implements Runnable {
+public class ValidationWorker extends Worker {
 
-	private StageManager manager = null;
 	private Map<String, Object> where = null;
 
 	public ValidationWorker(StageManager manager) {
-		this.manager = manager;
+		super(manager);
 		this.where = new HashMap<String, Object>();
 		where.put("status", Stage.STATUS.INIT);
 	}
 
-	public void run() {
-		List<Validation> running = DBUtil.findAll(Validation.class, where);
-		process(running);
+	public void work() {
+		
+			List<Validation> running = DBUtil.findAll(Validation.class, where);
+			if ( running != null && running.size() > 0)
+				process(null);
+		
 	}
 
 	private void process(List<Validation> ilist) {
 		try {
-			OozieClient wc = new OozieClient(manager.getEnv("oozie-url"));
+			OozieClient wc = new OozieClient(getManager().getEnv("oozie-url"));
 			List<Stage> nlist = new ArrayList<Stage>();
 
 			for (Validation validation : ilist) {
@@ -55,7 +57,7 @@ public class ValidationWorker extends Worker implements Runnable {
 			}
 
 			if (nlist.size() > 0) {
-				manager.nextPhase(Stage.PHASE.OOZIE, nlist);
+				getManager().nextPhase(Stage.TYPE.VALIDATION, nlist);
 			}
 		} catch (OozieClientException e) {
 			// TODO Auto-generated catch block

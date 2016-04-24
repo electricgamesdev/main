@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow>
+	<action path="common/actions/tech_check" as="tech_check">
+		<entity path="common/entities/file_errors" as="errors" />
+	</action>
+	<action path="common/actions/business_check" as="business_check" depends="tech_check">
+		<entity path="common/entities/attr_errors" as="errors" />
+		<rules path="common/rules/orphan_rules" as="orphan">
+			<event rule="product_type_gold" type="success">
+				<action path="common/actions/enrich_gold_cards" as="enrichment">
+					<entity path="common/entities/enriched_account" as="en_act" />
+					<rules path="common/rules/en_gold_rules" as="en" />
+				</action>
+			</event>
+			<event rule="product_type_silver" type="success">
+				<action path="common/actions/enrich_silver_cards" as="enrichment">
+					<entity path="common/entities/enriched_account" as="en_act" />
+					<rules path="common/rules/en_silver_rules" as="en" />
+				</action>
+			</event>
+		</rules>
+	</action>
+	<action path="common/actions/outlier_check" as="outlier_check"	depends="enrichment">
+		<entity path="common/entities/attr_errors" as="errors" />
+		<rules path="common/rules/integrity_rules" as="integrity" />
+	</action>
+	<action path="common/actions/aggregation_process" type="aggregation" depends="outlier_check">
+		<entity path="common/entities/aggregated_accounts" as="aggregation" />
+	</action>
+</workflow>

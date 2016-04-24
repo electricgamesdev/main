@@ -1,40 +1,66 @@
 package com.hydrogen.core;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 
-public abstract class HydrogenEngine extends Thread {
-	public abstract void generateCode() throws IOException, HydridesContextException;
+public class HydrogenEngine {
 
-	public abstract void runProcess();
+	public void build() {
+		for (Object key : econfig.keySet()) {
+			try {
+				Class c = Class.forName(econfig.getProperty(key.toString()));
+				Engine e = (Engine) c.newInstance();
+				e.setContext(context);
+				e.build();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	public void execute() {
+		for (Object key : econfig.keySet()) {
+			try {
+				Class c = Class.forName(econfig.getProperty(key.toString()));
+				Engine e = (Engine) c.newInstance();
+				e.setContext(context);
+				e.execute();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	private HydrogenEngine engine = null;
+	private Properties econfig = new Properties();
+
+	private HydrogenEngine(HydridesContext context) {
+		this.context = context;
+		try {
+			econfig.load(Engine.class.getResourceAsStream("engine.properties"));
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static HydrogenEngine getEngine(HydridesContext context) {
+		return new HydrogenEngine(context);
+	}
 
 	private HydridesContext context;
-
-	public void setContext(HydridesContext context) {
-		this.context = context;
-	}
 
 	public HydridesContext getContext() {
 		return context;
 	}
 
-	public Map<String, String> getConfigMap() {
-		return configMap;
-	}
-
-	Map<String, String> configMap = new HashMap<String, String>();
-
-	public void addConfig(String key, String value) {
-		configMap.put(key, value);
-	}
-
-	public void writeCode(String filename, String content) throws IOException {
-
-		FileUtils.writeStringToFile(context.getFileToCreate(filename), content);
-
-	}
 }

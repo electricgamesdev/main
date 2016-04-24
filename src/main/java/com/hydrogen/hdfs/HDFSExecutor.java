@@ -11,16 +11,13 @@ import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.Executor;
 
+import com.hydrogen.core.AbstractEngine;
+import com.hydrogen.core.HydridesContextException;
 import com.hydrogen.core.HydrogenEngine;
 
-public class HDFSExecutor extends HydrogenEngine {
+public class HDFSExecutor extends AbstractEngine {
 
-	public HDFSExecutor() {
-
-	}
-
-	@Override
-	public void runProcess(Map<String, Object> map) {
+	public void execute() {
 		// Remove
 		CommandLine rm = new CommandLine("hdfs");
 		rm.addArgument("dfs");
@@ -28,14 +25,14 @@ public class HDFSExecutor extends HydrogenEngine {
 		rm.addArgument("-R");
 		rm.addArgument("-skipTrash");
 		rm.addArgument("${file}");
-		rm.setSubstitutionMap(map);
+		rm.setSubstitutionMap(getConfigMap());
 
 		// Remove
 		CommandLine mkdir = new CommandLine("hdfs");
 		mkdir.addArgument("dfs");
 		mkdir.addArgument("-mkdir");
 		mkdir.addArgument("${file}");
-		mkdir.setSubstitutionMap(map);
+		mkdir.setSubstitutionMap(getConfigMap());
 
 		DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
 
@@ -47,7 +44,7 @@ public class HDFSExecutor extends HydrogenEngine {
 		try {
 			executor.execute(mkdir, resultHandler);
 			executor.execute(rm, resultHandler);
-			
+
 			resultHandler.waitFor();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -67,7 +64,12 @@ public class HDFSExecutor extends HydrogenEngine {
 		HDFSExecutor flumeExecutor = new HDFSExecutor();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("file", "/user/hydrogen");
-		flumeExecutor.runProcess(map);
+		flumeExecutor.execute();
+
+	}
+
+	public void build() {
+		// TODO Auto-generated method stub
 
 	}
 

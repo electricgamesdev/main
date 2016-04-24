@@ -1,52 +1,32 @@
 package com.hydrogen.oozie;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecuteResultHandler;
-import org.apache.commons.exec.DefaultExecutor;
-import org.apache.commons.exec.ExecuteException;
-import org.apache.commons.exec.ExecuteWatchdog;
-import org.apache.commons.exec.Executor;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
-import org.apache.oozie.client.CoordinatorJob;
-import org.apache.oozie.client.Job.Status;
-import org.apache.oozie.client.OozieClient;
-import org.apache.oozie.client.OozieClientException;
-import org.apache.oozie.client.WorkflowJob;
-
+import com.hydrogen.core.AbstractEngine;
 import com.hydrogen.core.HydridesContext;
-import com.hydrogen.core.HydridesContextException;
-import com.hydrogen.core.HydrogenEngine;
 import com.hydrogen.model.Entity;
 import com.hydrogen.model.Source;
 
-public class OozieExecutor extends HydrogenEngine {
+public class OozieEngine extends AbstractEngine {
 
-	public OozieExecutor() {
+	
 
-	}
-
-	@Override
-	public void runProcess() {
+	
+	public void execute() {
 
 	
 	}
 
 	public static void main(String[] args) {
-		OozieExecutor flumeExecutor = new OozieExecutor();
-		flumeExecutor.runProcess();
+		OozieEngine flumeExecutor = new OozieEngine();
+		flumeExecutor.execute();
 
 	}
 
-	@Override
-	public void generateCode() throws IOException, HydridesContextException {
+	public void build() {
 		HydridesContext context = getContext();
 		
 		Source source = null;
@@ -66,11 +46,11 @@ public class OozieExecutor extends HydrogenEngine {
 					
 					String id = context.getIdInPath(e.getPath());
 
-					String s = IOUtils.toString(OozieExecutor.class.getResourceAsStream("ds.xml"));
+					String s = IOUtils.toString(OozieEngine.class.getResourceAsStream("ds.xml"));
 					s = StringUtils.replace(s, "#1", id);
 					ds.append(StringUtils.replace(s, "#2", id));
 
-					String i = IOUtils.toString(OozieExecutor.class.getResourceAsStream("ie.xml"));
+					String i = IOUtils.toString(OozieEngine.class.getResourceAsStream("ie.xml"));
 					i = StringUtils.replace(i, "#1", id + "IN");
 					ie.append(StringUtils.replace(i, "#2", id));
 
@@ -79,7 +59,7 @@ public class OozieExecutor extends HydrogenEngine {
 				}
 
 				Properties srcProp = new Properties();
-				srcProp.load(OozieExecutor.class.getResourceAsStream("co.properties"));
+				srcProp.load(OozieEngine.class.getResourceAsStream("co.properties"));
 				srcProp.setProperty("oozie.coord.application.path",
 						"${nameNode}/user/hydrogen/workflow/" + source + "_coordinator.xml");
 				srcProp.setProperty("workflowPath", "${nameNode}/user/hydrogen/workflow/" + source + "_workflow.xml");
@@ -92,12 +72,12 @@ public class OozieExecutor extends HydrogenEngine {
 			
 
 				writeCode(source + ".properties", data.toString());
-				String co = IOUtils.toString(OozieExecutor.class.getResourceAsStream("co.xml"));
+				String co = IOUtils.toString(OozieEngine.class.getResourceAsStream("co.xml"));
 				co = StringUtils.replace(co, "#1", ds.toString());
 				co = StringUtils.replace(co, "#2", ie.toString());
 				co = StringUtils.replace(co, "coordinator1", source + "_coordinator");
 				System.out.println("co=" + co);
-				String fc = IOUtils.toString(OozieExecutor.class.getResourceAsStream("fc.xml"));
+				String fc = IOUtils.toString(OozieEngine.class.getResourceAsStream("fc.xml"));
 				fc = StringUtils.replace(fc, "#1", "dpf");
 				fc = StringUtils.replace(fc, "#2", mv);
 				fc = StringUtils.replace(fc, "hydridesdpf", source + "_workflow");
@@ -108,7 +88,7 @@ public class OozieExecutor extends HydrogenEngine {
 
 				System.out.println("oozie script completed ");
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

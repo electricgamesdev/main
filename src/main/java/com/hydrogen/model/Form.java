@@ -15,14 +15,16 @@ public class Form extends Model {
 	private List<Event> events = new ArrayList<Event>();
 
 	@ManyToOne
-	private Component component = null;
+	private Template template = null;
 
-	public Component getComponent() {
-		return component;
+	
+
+	public Template getTemplate() {
+		return template;
 	}
 
-	public void setComponent(Component component) {
-		this.component = component;
+	public void setTemplate(Template template) {
+		this.template = template;
 	}
 
 	public List<Event> getEvents() {

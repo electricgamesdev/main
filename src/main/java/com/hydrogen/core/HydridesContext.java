@@ -13,7 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.xml.sax.SAXException;
 
 import com.hydrogen.model.Action;
-import com.hydrogen.model.Component;
+import com.hydrogen.model.Template;
 import com.hydrogen.model.Entity;
 import com.hydrogen.model.Event;
 import com.hydrogen.model.Field;
@@ -33,11 +33,16 @@ public class HydridesContext {
 	private URL xml = null;
 	private Hydrides hydrides = null;
 	private String appPath = null;
-
+	private String appName = null;
 	public HydridesContext(URL xml) {
 		this.xml = xml;
 		appPath = xml.toString().substring(0, xml.toString().lastIndexOf(File.separator));
+		appName = xml.toString().substring(xml.toString().lastIndexOf(File.separator)+1,xml.toString().indexOf("."));
 		System.out.println("App path " + appPath);
+	}
+	
+	public String getAppName() {
+		return appName;
 	}
 
 	public Hydrides getHydrides() {
@@ -48,7 +53,10 @@ public class HydridesContext {
 				digester.setValidating(false);
 				digester.addObjectCreate("hydrides", "com.hydrogen.model.Hydrides");
 				digester.addSetProperties("hydrides");
-
+				digester.addSetProperties("hydrides/domain","path","domainPath");
+				digester.addSetProperties("hydrides/prototype","path","prototypePath");
+				digester.addSetProperties("hydrides/pipeline","path","pipelinePath");
+				
 				// sources
 				digester.addObjectCreate("hydrides/domain/source", "com.hydrogen.model.Source");
 				digester.addSetProperties("hydrides/domain/source");
@@ -127,18 +135,18 @@ public class HydridesContext {
 
 	}
 
-	public Component getComponent(String path) throws HydridesContextException {
+	public Template getComponent(String path) throws HydridesContextException {
 		if (pool.get(path) == null) {
 
-			Digester digester = getDigester(Component.class);
-			map(digester, "component/form", Form.class, Component.class);
+			Digester digester = getDigester(Template.class);
+			map(digester, "component/form", Form.class, Template.class);
 			map(digester, "component/form/event", Event.class, Form.class);
 			map(digester, "component/form/event/param", Param.class, Event.class);
 
-			add(digester, path, Component.class);
+			add(digester, path, Template.class);
 
 		}
-		return (Component) pool.get(path);
+		return (Template) pool.get(path);
 	}
 
 	public Workflow getWorkflow(String path) throws HydridesContextException {
@@ -147,7 +155,6 @@ public class HydridesContext {
 			Digester digester = getDigester(Workflow.class);
 			map(digester, "workflow/action", Action.class, Workflow.class);
 			map(digester, "workflow/action/entity", Entity.class, Action.class);
-			map(digester, "workflow/action/entity", Form.class, Action.class);
 			map(digester, "workflow/action/rules", Rules.class, Action.class);
 
 			add(digester, path, Workflow.class);
@@ -204,7 +211,8 @@ public class HydridesContext {
 	public static void main(String[] args) throws MalformedURLException, HydridesContextException {
 		URL xml = new File("/home/wafiq/workspace/hydrogen/src/main/resources/bank_risk_rating.hydrides.xml").toURL();
 		HydridesContext context = new HydridesContext(xml);
-		System.out.println(context.getHydrides());
+		
+		System.out.println(context.getAppName());
 		Hydrides h = context.getHydrides();
 
 		System.out.println("Stage 1 Validation: Anlyzing Hydrides and Its dependecies");
@@ -213,8 +221,8 @@ public class HydridesContext {
 			System.out.println(s1);
 		}
 
-		for (Component s : h.getComponents()) {
-			Component s1 = context.getComponent(s.getPath());
+		for (Template s : h.getComponents()) {
+			Template s1 = context.getComponent(s.getPath());
 			System.out.println(s1);
 		}
 
@@ -231,8 +239,8 @@ public class HydridesContext {
 			}
 		}
 
-		for (Component s : h.getComponents()) {
-			Component s1 = context.getComponent(s.getPath());
+		for (Template s : h.getComponents()) {
+			Template s1 = context.getComponent(s.getPath());
 			for (Form f : s1.getForms()) {
 				Form e1 = context.getForm(f.getPath());
 			}
@@ -254,7 +262,7 @@ public class HydridesContext {
 	}
 
 	public String getHomeDir() {
-		return System.getenv("user.home");
+		return targetDir.getAbsolutePath();
 	}
 
 	public File getFileToCreate(String filename) {
@@ -265,6 +273,24 @@ public class HydridesContext {
 	public String getEnv(String string) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	private File targetDir = null;
+	public void setTargetDir(File dir) {
+		this.targetDir=dir;
+	}
+	
+	public File getTargetDir() {
+		return targetDir;
+	}
+
+	org.apache.maven.plugin.logging.Log log2=null;
+	public void setLog(org.apache.maven.plugin.logging.Log log2) {
+		this.log2=log2;
+	}
+	
+	public void log(String s){
+		this.log2.info(s);
 	}
 
 }

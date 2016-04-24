@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <action>
-	<task>
-		<entity ref="file_error" as="error" />
+	<task type="join" as="summary_details">
+		<execute>
+			<entity ref="ctl" />
+			<entity ref="aggr" />
+			<condition>act.ct=act_ctl.recordcount and act_ctl.checksum!=act.sm
+			</condition>
+		</execute>
 		<result>
-			<form ref="summary" />
+			<form ref="profiling_grid" />
+			<form ref="processing_grid" />
 		</result>
 	</task>
 </action>

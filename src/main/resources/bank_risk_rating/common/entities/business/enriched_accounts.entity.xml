@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity pattern="[a-b]_act_[0-9]_[0-9].dat" field-splitter="|" record-splitter="line">
+	<field name="card_type" type="string" format="[]" required="true"/>
+	<field name="acct_number" type="number" format="[]" value-by-header="" required="true"/>
+	<field name="amount" type="number" format="[]" value-by-header="" required="true"/>
+	<field name="country" type="string" value-by-header="" required="true" partition-key="true">
+		<field name="country_codes" entity="common/entity/cty_prod_bu"/>
+	</field>
+	<field name="reporting_period" type="number" value-by-header="" required="true" partition-key="true"/>
+</entity>

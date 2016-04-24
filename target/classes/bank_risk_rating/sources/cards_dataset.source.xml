@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<source  hdfs_path="/user/hydrogen/hydrides/bank_risk_rating/source/loans" group_filter="header.substring(12,3)">
-	<entity path="entities/control" as="ctl" type="primary"/>
-	<entity path="entities/loan_account" as="act"/>
-	<entity path="entities/loan_collateral" as="col"/>
-	<entity path="entities/loan_supp" as="supp" type="optional"/>
-</source>

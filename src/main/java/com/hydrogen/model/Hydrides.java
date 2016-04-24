@@ -4,13 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 @Entity
 public class Hydrides extends Model {
@@ -19,10 +13,40 @@ public class Hydrides extends Model {
 	private List<Source> sources = new ArrayList<Source>();
 	
 	@OneToMany(mappedBy = "hydrides")
-	private List<Component> components = new ArrayList<Component>();
+	private List<Template> components = new ArrayList<Template>();
 	
 	@OneToMany(mappedBy = "hydrides")
 	private List<Workflow> workflows = new ArrayList<Workflow>();
+
+	private String domainPath = null;
+	private String prototypePath=null;
+	private String piplinePath = null;
+	
+	
+	
+	public String getDomainPath() {
+		return domainPath;
+	}
+
+	public void setDomainPath(String domainPath) {
+		this.domainPath = domainPath;
+	}
+
+	public String getPrototypePath() {
+		return prototypePath;
+	}
+
+	public void setPrototypePath(String prototypePath) {
+		this.prototypePath = prototypePath;
+	}
+
+	public String getPiplinePath() {
+		return piplinePath;
+	}
+
+	public void setPiplinePath(String piplinePath) {
+		this.piplinePath = piplinePath;
+	}
 
 	public void addWorkflow(Workflow obj) {
 		workflows.add(obj);
@@ -32,11 +56,11 @@ public class Hydrides extends Model {
 		return workflows;
 	}
 
-	public void addComponent(Component obj) {
+	public void addComponent(Template obj) {
 		components.add(obj);
 	}
 
-	public List<Component> getComponents() {
+	public List<Template> getComponents() {
 		return components;
 	}
 

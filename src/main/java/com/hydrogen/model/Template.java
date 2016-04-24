@@ -8,11 +8,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Component extends Model {
+public class Template extends Model {
 
 	private List<Workflow> workflows = new ArrayList<Workflow>();
 	
-	@OneToMany(mappedBy="component")
+	@OneToMany(mappedBy="template")
 	private List<Form> forms = new ArrayList<Form>();
 
 	@ManyToOne

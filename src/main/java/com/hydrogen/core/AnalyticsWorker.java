@@ -14,25 +14,25 @@ import com.hydrogen.jpa.DBUtil;
 import com.hydrogen.stage.Analytics;
 import com.hydrogen.stage.Stage;
 
-public class AnalyticsWorker extends Worker implements Runnable {
+public class AnalyticsWorker extends Worker {
 
-	private StageManager manager = null;
 	private Map<String, Object> where = null;
 
 	public AnalyticsWorker(StageManager manager) {
-		this.manager = manager;
+		super(manager);
 		this.where = new HashMap<String, Object>();
 		where.put("status", Stage.STATUS.INIT);
 	}
 
-	public void run() {
+	public void work() {
+	
 		List<Analytics> running = DBUtil.findAll(Analytics.class, where);
 		process(running);
 	}
 
 	private void process(List<Analytics> ilist) {
 		try {
-			OozieClient wc = new OozieClient(manager.getEnv("oozie-url"));
+			OozieClient wc = new OozieClient(getManager().getEnv("oozie-url"));
 			List<Stage> nlist = new ArrayList<Stage>();
 
 			for (Analytics analysis : ilist) {
@@ -53,7 +53,7 @@ public class AnalyticsWorker extends Worker implements Runnable {
 			}
 
 			if (nlist.size() > 0) {
-				manager.nextPhase(Stage.PHASE.CRUNCH, nlist);
+				getManager().nextPhase(Stage.TYPE.ANALYTICS, nlist);
 			}
 		} catch (OozieClientException e) {
 			// TODO Auto-generated catch block

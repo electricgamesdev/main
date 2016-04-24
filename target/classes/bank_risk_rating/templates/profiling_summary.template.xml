@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+	<!-- mapping to html element to pass parameters -->
+	<dimension>
+		<action path="common/actions/get_profiling_details">
+			<entity path="common/entities/business/ctl_account" as="ctl"/>
+			<entity path="common/entities/business/aggregated_account" as="aggr" />
+		</action>
+	</dimension>
+	<form path="/common/forms/profiling_summary" as="profiling_grid">
+		<event type="click" as="profiling_button">
+			<param name="county_code" as="cty" />
+			<param name="product_code" as="pdt" />
+			<param name="region_code" as="rgn" />
+			<param name="business_unit" as="bu" />
+			<param name="to_rpt_prd" as="to" />
+			<param name="from_rpt_prd" as="from" />
+		</event>
+	</form>
+	<form path="/common/forms/processing_summary" as="processing_grid">
+		<event type="click" as="processing_button">
+			<param name="county_code" as="cty" />
+			<param name="product_code" as="pdt" />
+			<param name="region_code" as="rgn" />
+			<param name="business_unit" as="bu" />
+			<param name="to_rpt_prd" as="to" />
+			<param name="from_rpt_prd" as="from" />
+		</event>
+	</form>
+</template>

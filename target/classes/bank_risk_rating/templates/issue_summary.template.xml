@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+	<!-- mapping to html element to pass parameters -->
+	<dimension>
+		<action path="common/actions/get_issue_details">
+			<entity path="common/entities/business/aggregated_account" />
+			<entity path="common/entities/business/enriched_account" />
+		</action>
+	</dimension>
+	<form path="/common/forms/issue_summary" as="profiling_grid">
+		<event type="click" as="get_sumry_button">
+			<param name="county_code" as="cty" />
+			<param name="product_code" as="pdt" />
+			<param name="region_code" as="rgn" />
+			<param name="business_unit" as="bu" />
+			<param name="to_rpt_prd" as="to" />
+			<param name="from_rpt_prd" as="from" />
+		</event>
+	</form>
+</template>

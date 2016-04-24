@@ -1,6 +1,5 @@
 package com.hydrogen.stage;
 
-import java.sql.Clob;
 import java.sql.Timestamp;
 
 import javax.persistence.GeneratedValue;
@@ -16,7 +15,11 @@ public abstract class Stage {
 	}
 
 	public enum PHASE {
-		FLUME, OOZIE, CRUNCH, HIVE, SPARK, HBASE
+		FLUME, OOZIE, CRUNCH, HIVE, SPARK, HBASE, CACHE
+	}
+
+	public enum TYPE {
+		INGESTION, VALIDATION, ANALYTICS, DIMENSION, FORMATION, PRESENTATION
 	}
 
 	@Id
@@ -114,7 +117,7 @@ public abstract class Stage {
 			statusChanged = true;
 		this.status = status;
 	}
-	
+
 	public boolean isStatusChanged() {
 		return statusChanged;
 	}

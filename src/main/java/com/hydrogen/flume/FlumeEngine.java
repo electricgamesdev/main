@@ -3,6 +3,7 @@ package com.hydrogen.flume;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
@@ -13,20 +14,18 @@ import org.apache.commons.exec.Executor;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
+import com.hydrogen.core.AbstractEngine;
+import com.hydrogen.core.Engine;
 import com.hydrogen.core.HydridesContext;
 import com.hydrogen.core.HydridesContextException;
 import com.hydrogen.core.HydrogenEngine;
 import com.hydrogen.model.Entity;
+import com.hydrogen.model.Hydrides;
 import com.hydrogen.model.Source;
 
-public class FlumeExecutor extends HydrogenEngine {
+public class FlumeEngine extends AbstractEngine {
 
-	public FlumeExecutor() {
-
-	}
-
-	@Override
-	public void runProcess() {
+	public void execute() {
 		CommandLine cmdLine = new CommandLine("flume-ng");
 		cmdLine.addArgument("agent");
 		cmdLine.addArgument("-f");
@@ -67,55 +66,55 @@ public class FlumeExecutor extends HydrogenEngine {
 	}
 
 	public static void main(String[] args) throws IOException, HydridesContextException {
-		FlumeExecutor flumeExecutor = new FlumeExecutor();
-		flumeExecutor.generateCode();
-		flumeExecutor.runProcess();
+		FlumeEngine flumeExecutor = new FlumeEngine();
+		flumeExecutor.build();
+		flumeExecutor.execute();
 
 	}
 
-	@Override
-	public void generateCode() throws IOException, HydridesContextException {
+	public void build() {
+		try {
+			List<String> confList = IOUtils.readLines(FlumeEngine.class.getResourceAsStream("flume_conf.template"));
+			HydridesContext context = getContext();
+			Hydrides hydrides = context.getHydrides();
+			List<Source> sources = hydrides.getSources();
+			for (Source s : sources) {
 
-		List<String> confList = IOUtils.readLines(FlumeExecutor.class.getResourceAsStream("flume_conf.template"));
-		HydridesContext context = getContext();
-		List<Source> sources = context.getHydrides().getSources();
-		for (Source s : sources) {
+				String conf = new String();
+				String sid = context.getIdInPath(s.getPath());
+				for (String c : confList) {
+					conf = conf + c + "\n";
+				}
 
-			String conf = new String();
-			String sid = context.getIdInPath(s.getPath());
-			for (String c : confList) {
-				conf = conf + c + "\n";
-			}
+				Source source = context.getSource(s.getPath());
 
-			Source source = context.getSource(s.getPath());
+				String entities = "";
+				String patterns = "";
 
-			String entities = "";
-			String patterns = "";
+				for (Entity e : source.getEntities()) {
 
-			for (Entity e : source.getEntities()) {
+					String eid = context.getIdInPath(e.getPath());
+					conf = conf + "agent.sources.source1.selector.mapping." + eid + " = channel1 \n";
+					entities = entities + eid + ",";
 
-				String eid = context.getIdInPath(e.getPath());
-				conf = conf + "agent.sources.source1.selector.mapping." + eid + " = channel1 \n";
-				entities = entities + eid + ",";
+					Entity entity = context.getEntity(e.getPath());
 
-				Entity entity = context.getEntity(e.getPath());
+					patterns = patterns + entity.getPattern() + ",";
 
-				patterns = patterns + entity.getPattern() + ",";
+				}
 
-			}
+				conf = conf + "agent.sources.source1.interceptors.i2.entities = " + entities + " \n";
+				conf = conf + "agent.sources.source1.interceptors.i2.patterns = " + patterns + " \n";
+				conf = conf.replaceAll("agent", sid);
+				String hdfsdatadir = source.getHdfs_path();
+				String hdfserrordir = source.getHdfs_path();
+				conf = conf.replaceAll("source-dir", s.getLink());
+				conf = conf.replaceAll("hdfs-dir", hdfsdatadir);
+				conf = conf.replaceAll("hdfs-error-dir", hdfserrordir);
+				conf = conf.replaceAll("sourcefilter", source.getGroup_filter());
 
-			conf = conf + "agent.sources.source1.interceptors.i2.entities = " + entities + " \n";
-			conf = conf + "agent.sources.source1.interceptors.i2.patterns = " + patterns + " \n";
-			conf = conf.replaceAll("agent", sid);
-			String hdfsdatadir = source.getHdfs_path();
-			String hdfserrordir = source.getHdfs_path();
-			conf = conf.replaceAll("source-dir", s.getLink());
-			conf = conf.replaceAll("hdfs-dir", hdfsdatadir);
-			conf = conf.replaceAll("hdfs-error-dir", hdfserrordir);
-			conf = conf.replaceAll("sourcefilter", source.getGroup_filter());
+				// clean up - fresh build
 
-			// clean up - fresh build
-			try {
 				File sourceDir = new File(s.getLink());
 				File data1 = new File(sourceDir.getParent() + File.separator + source + "_data1");
 				File data2 = new File(sourceDir.getParent() + File.separator + source + "_data2");
@@ -144,16 +143,16 @@ public class FlumeExecutor extends HydrogenEngine {
 				conf = conf.replaceAll("checkpoint1", cp1.getAbsolutePath());
 				conf = conf.replaceAll("checkpoint2", cp2.getAbsolutePath());
 
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				addConfig("file", getContext().getHomeDir() + File.separator + source + ".flume");
+				writeCode(source + ".flume", conf);
+
 			}
-
-			addConfig("file", context.getHomeDir() + File.separator + source + ".flume");
-			writeCode(source + ".flume", conf);
-
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-
 	}
+
+	
 
 }

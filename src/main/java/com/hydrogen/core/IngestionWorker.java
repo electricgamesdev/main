@@ -13,21 +13,23 @@ import com.hydrogen.model.Entity;
 import com.hydrogen.model.Source;
 import com.hydrogen.stage.Ingestion;
 import com.hydrogen.stage.Stage;
+import com.hydrogen.stage.Stage.TYPE;
 
-public class IngestionWorker extends Worker implements Runnable {
+public class IngestionWorker extends Worker {
 
 	private StageManager manager = null;
 	private Map<String, Object> where = null;
 
 	public IngestionWorker(StageManager manager) {
-		this.manager = manager;
+		super(manager);
 		this.where = new HashMap<String, Object>();
 		where.put("status", Stage.STATUS.RUNNING);
 	}
 
-	public void run() {
+	public void work() {
 		List<Ingestion> running = DBUtil.findAll(Ingestion.class, where);
-		checkToTriggerWorkflow(running);
+		if (running != null && running.size() > 0)
+			checkToTriggerWorkflow(running);
 	}
 
 	private void checkToTriggerWorkflow(List<Ingestion> ilist) {
@@ -64,7 +66,7 @@ public class IngestionWorker extends Worker implements Runnable {
 
 				}
 				if (dataset.size() == src.getEntities().size()) {
-					manager.nextPhase(first.getPhase(), dataset);
+					manager.nextPhase(TYPE.INGESTION, dataset);
 				}
 			}
 

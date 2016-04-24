@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<source hdfs_path="/user/hydrogen/hydrides/bank_risk_rating/source/cards" group_filter="">
-	<entity path="entities/control" as="ctl" type="primary"/>
-	<entity path="entities/card_account" as="act"/>
-	<entity path="entities/card_scores" as="scr"/>
-	<entity path="entities/card_supp" as="supp" type="optional"/>
-</source>

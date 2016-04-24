@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+	<rule name="Is of valid age">
+		<when>
+			<field name="age" check=">18" />
+		</when>
+		<then>
+			<field name="age_valid" value="true" />
+		</then>
+	</rule>
+
+	<rule name="Application was made this year">
+		<when>
+			<field name="dateApplied" check=">01-jan-2009"/>
+		</when> 
+		<then>
+			<field name="valid" value="true" />
+		</then>
+	</rule>
+	
+</rules>
