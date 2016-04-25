@@ -11,6 +11,16 @@ public class Field implements Serializable{
 	private boolean required=false;
 	private String value_by_header=null;
 	private String format=null;
+	private List<Field> fields = new ArrayList<Field>();
+	
+	public List<Field> getFields() {
+		return fields;
+	}
+	
+	public void addField(Field f) {
+		this.fields.add(f);
+	}
+	
 	public String getName() {
 		return name;
 	}

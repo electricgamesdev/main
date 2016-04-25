@@ -60,4 +60,3 @@ agent.sinks.sink3.hdfs.fileSuffix = .invalid
 agent.sinks.sink3.hdfs.rollCount = 0
 agent.sinks.sink3.hdfs.rollInterval = 0
 agent.sinks.sink3.hdfs.rollSize = 0
-Status API Training Shop Blog About

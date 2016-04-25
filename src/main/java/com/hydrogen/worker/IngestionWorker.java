@@ -1,4 +1,4 @@
-package com.hydrogen.core;
+package com.hydrogen.worker;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hydrogen.core.StageManager;
+import com.hydrogen.core.Worker;
 import com.hydrogen.jpa.DBUtil;
 import com.hydrogen.model.Entity;
 import com.hydrogen.model.Source;

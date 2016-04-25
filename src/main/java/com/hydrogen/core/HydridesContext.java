@@ -18,6 +18,7 @@ import com.hydrogen.model.Entity;
 import com.hydrogen.model.Event;
 import com.hydrogen.model.Field;
 import com.hydrogen.model.Form;
+import com.hydrogen.model.Function;
 import com.hydrogen.model.Hydrides;
 import com.hydrogen.model.Param;
 import com.hydrogen.model.Rules;
@@ -134,15 +135,23 @@ public class HydridesContext {
 		digester.addSetNext(path, "add" + cls.getSimpleName(), parent.getName());
 
 	}
+	
+	private void map(Digester digester, String path, Class cls, Class parent,String var) {
+		
+		digester.addObjectCreate(path, cls.getName());
+		digester.addSetProperties(path);
+		digester.addSetNext(path, "add" + var, parent.getName());
 
-	public Template getComponent(String path) throws HydridesContextException {
+	}
+
+	public Template getTemplate(String path) throws HydridesContextException {
 		if (pool.get(path) == null) {
 
 			Digester digester = getDigester(Template.class);
-			map(digester, "component/form", Form.class, Template.class);
-			map(digester, "component/form/event", Event.class, Form.class);
-			map(digester, "component/form/event/param", Param.class, Event.class);
-
+			map(digester, "template/form", Form.class, Template.class);
+			map(digester, "template/form/event", Event.class, Form.class);
+			map(digester, "template/form/event/param", Param.class, Event.class);
+			map(digester, "template/dimension", Action.class, Template.class);
 			add(digester, path, Template.class);
 
 		}
@@ -156,7 +165,11 @@ public class HydridesContext {
 			map(digester, "workflow/action", Action.class, Workflow.class);
 			map(digester, "workflow/action/entity", Entity.class, Action.class);
 			map(digester, "workflow/action/rules", Rules.class, Action.class);
-
+			map(digester, "workflow/action/rules/event", Event.class, Action.class);
+			map(digester, "workflow/action/rules/event/action", Action.class,Event.class);
+			map(digester, "workflow/action/rules/event/action/entity", Entity.class,Action.class);
+			map(digester, "workflow/action/rules/event/action/rules", Rules.class,Action.class);
+			map(digester, "workflow/action/rules/event/action/workflow", Workflow.class,Action.class);
 			add(digester, path, Workflow.class);
 
 		}
@@ -168,6 +181,7 @@ public class HydridesContext {
 
 			Digester digester = getDigester(Entity.class);
 			map(digester, "entity/field", Field.class, Entity.class);
+			map(digester, "entity/field/field", Field.class, Field.class);
 			add(digester, path, Entity.class);
 
 		}
@@ -191,6 +205,10 @@ public class HydridesContext {
 
 			Digester digester = getDigester(Action.class);
 			map(digester, "action/task", Task.class, Action.class);
+			map(digester, "action/execute/entity",Entity.class,Task.class,"Execute");
+			map(digester, "action/execute/entity/function",Function.class,Entity.class);
+			map(digester, "action/execute/entity",Entity.class,Task.class,"Result");
+			map(digester, "action/execute/form",Form.class,Task.class,"Result");
 			add(digester, path, Action.class);
 
 		}
@@ -215,14 +233,14 @@ public class HydridesContext {
 		System.out.println(context.getAppName());
 		Hydrides h = context.getHydrides();
 
-		System.out.println("Stage 1 Validation: Anlyzing Hydrides and Its dependecies");
+		System.out.println("Stage 1 Validation: Anlyzing Hydrides and Its dependecies "+h);
 		for (Source s : h.getSources()) {
 			Source s1 = context.getSource(s.getPath());
 			System.out.println(s1);
 		}
 
 		for (Template s : h.getComponents()) {
-			Template s1 = context.getComponent(s.getPath());
+			Template s1 = context.getTemplate(s.getPath());
 			System.out.println(s1);
 		}
 
@@ -240,7 +258,7 @@ public class HydridesContext {
 		}
 
 		for (Template s : h.getComponents()) {
-			Template s1 = context.getComponent(s.getPath());
+			Template s1 = context.getTemplate(s.getPath());
 			for (Form f : s1.getForms()) {
 				Form e1 = context.getForm(f.getPath());
 			}

@@ -24,7 +24,7 @@
 		<entity path="common/entities/attr_errors" as="errors" />
 		<rules path="common/rules/integrity_rules" as="integrity" />
 	</action>
-	<action path="common/actions/aggregation_process" type="aggregation" depends="outlier_check">
+	<action path="common/actions/aggregation" type="aggregation" depends="outlier_check">
 		<entity path="common/entities/aggregated_accounts" as="aggregation" />
 	</action>
 </workflow>

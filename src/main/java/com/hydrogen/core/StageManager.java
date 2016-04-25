@@ -22,6 +22,12 @@ import com.hydrogen.stage.Dimension;
 import com.hydrogen.stage.Ingestion;
 import com.hydrogen.stage.Stage;
 import com.hydrogen.stage.Stage.TYPE;
+import com.hydrogen.worker.AnalyticsWorker;
+import com.hydrogen.worker.DimensionWorker;
+import com.hydrogen.worker.FormatingWorker;
+import com.hydrogen.worker.IngestionWorker;
+import com.hydrogen.worker.PresentationWorker;
+import com.hydrogen.worker.ValidationWorker;
 import com.hydrogen.stage.Validation;
 
 public class StageManager {

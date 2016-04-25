@@ -53,4 +53,11 @@ public class BuildManager extends AbstractMojo {
 		}
 
 	}
+	
+	public static void main(String[] args) throws MalformedURLException {
+		File f = new File("/home/wafiq/workspace/hydrogen/src/main/resources/bank_risk_rating.hydrides.xml");
+		HydridesContext context = new HydridesContext(f.toURI().toURL());
+		BuildManager manager=new BuildManager();
+		manager.generate(context);
+	}
 }

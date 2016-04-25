@@ -1,4 +1,4 @@
-package com.hydrogen.core;
+package com.hydrogen.worker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +10,8 @@ import org.apache.oozie.client.Job.Status;
 import org.apache.oozie.client.OozieClient;
 import org.apache.oozie.client.OozieClientException;
 
+import com.hydrogen.core.StageManager;
+import com.hydrogen.core.Worker;
 import com.hydrogen.jpa.DBUtil;
 import com.hydrogen.stage.Stage;
 import com.hydrogen.stage.Validation;

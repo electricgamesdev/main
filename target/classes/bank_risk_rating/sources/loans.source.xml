@@ -2,6 +2,6 @@
 <source  group_filter="header.substring(12,3)">
 	<entity path="common/entities/business/control" as="ctl" type="primary"/>
 	<entity path="common/entities/business/loan_account" as="act"/>
-	<entity path="common/entities/businsss/loan_collateral" as="col"/>
+	<entity path="common/entities/business/loan_collateral" as="col"/>
 	<entity path="common/entities/business/supplement" as="supp" />
 </source>

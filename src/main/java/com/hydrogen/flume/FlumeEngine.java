@@ -108,19 +108,24 @@ public class FlumeEngine extends AbstractEngine {
 				conf = conf.replaceAll("agent", sid);
 				String hdfsdatadir = source.getHdfs_path();
 				String hdfserrordir = source.getHdfs_path();
-				conf = conf.replaceAll("source-dir", s.getLink());
-				conf = conf.replaceAll("hdfs-dir", hdfsdatadir);
-				conf = conf.replaceAll("hdfs-error-dir", hdfserrordir);
+
+				if (s.getLink() != null)
+					conf = conf.replaceAll("source-dir", s.getLink());
+				if (hdfsdatadir != null)
+					conf = conf.replaceAll("hdfs-dir", hdfsdatadir);
+				if (hdfserrordir != null)
+					conf = conf.replaceAll("hdfs-error-dir", hdfserrordir);
 				conf = conf.replaceAll("sourcefilter", source.getGroup_filter());
 
 				// clean up - fresh build
-
-				File sourceDir = new File(s.getLink());
-				File data1 = new File(sourceDir.getParent() + File.separator + source + "_data1");
-				File data2 = new File(sourceDir.getParent() + File.separator + source + "_data2");
-				File cp1 = new File(sourceDir.getParent() + File.separator + source + "_cp1");
-				File cp2 = new File(sourceDir.getParent() + File.separator + source + "_cp2");
-
+				File sourceDir = new File("");
+				if(s.getLink()!=null)
+				sourceDir = new File(s.getLink());
+				File data1 = new File(sourceDir.getParent() + File.separator + sid + "_data1");
+				File data2 = new File(sourceDir.getParent() + File.separator + sid + "_data2");
+				File cp1 = new File(sourceDir.getParent() + File.separator + sid + "_cp1");
+				File cp2 = new File(sourceDir.getParent() + File.separator + sid + "_cp2");
+				/*
 				if (sourceDir.exists())
 					FileUtils.forceDelete(sourceDir);
 				if (data1.exists())
@@ -137,14 +142,14 @@ public class FlumeEngine extends AbstractEngine {
 				FileUtils.forceMkdir(data2);
 				FileUtils.forceMkdir(cp1);
 				FileUtils.forceMkdir(cp2);
-
+*/
 				conf = conf.replaceAll("data1", data1.getAbsolutePath());
 				conf = conf.replaceAll("data2", data2.getAbsolutePath());
 				conf = conf.replaceAll("checkpoint1", cp1.getAbsolutePath());
 				conf = conf.replaceAll("checkpoint2", cp2.getAbsolutePath());
 
-				addConfig("file", getContext().getHomeDir() + File.separator + source + ".flume");
-				writeCode(source + ".flume", conf);
+				addConfig("file", getContext().getHomeDir() + File.separator + sid + ".flume");
+				writeCode(sid + ".flume", conf);
 
 			}
 		} catch (Exception e1) {
@@ -152,7 +157,5 @@ public class FlumeEngine extends AbstractEngine {
 			e1.printStackTrace();
 		}
 	}
-
-	
 
 }

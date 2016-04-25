@@ -8,6 +8,16 @@ public class Event {
 	private String as=null;
 	private String type=null;
 	private List<Param> params = new ArrayList<Param>();
+	private List<Action> actions = new ArrayList<Action>();
+	
+	public List<Action> getActions() {
+		return actions;
+	}
+	
+	public void addAction(Action action){
+		actions.add(action);
+	}
+	
 	public String getAs() {
 		return as;
 	}

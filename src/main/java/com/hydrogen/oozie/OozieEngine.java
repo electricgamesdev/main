@@ -40,7 +40,7 @@ public class OozieEngine extends AbstractEngine {
 
 				String mv = "<move source=\"${nameNode}" + source.getHdfs_path()
 						+ "/${#1}'\" target=\"${nameNode}" + source.getHdfs_path() + "/${wf:id()}/${#1}\"/>";
-
+				String srcid=context.getIdInPath(src.getPath());
 				
 				for (Entity e : source.getEntities()) {
 					
@@ -71,20 +71,20 @@ public class OozieEngine extends AbstractEngine {
 
 			
 
-				writeCode(source + ".properties", data.toString());
+				writeCode(srcid + ".properties", data.toString());
 				String co = IOUtils.toString(OozieEngine.class.getResourceAsStream("co.xml"));
 				co = StringUtils.replace(co, "#1", ds.toString());
 				co = StringUtils.replace(co, "#2", ie.toString());
-				co = StringUtils.replace(co, "coordinator1", source + "_coordinator");
+				co = StringUtils.replace(co, "coordinator1", srcid + "_coordinator");
 				System.out.println("co=" + co);
 				String fc = IOUtils.toString(OozieEngine.class.getResourceAsStream("fc.xml"));
 				fc = StringUtils.replace(fc, "#1", "dpf");
 				fc = StringUtils.replace(fc, "#2", mv);
-				fc = StringUtils.replace(fc, "hydridesdpf", source + "_workflow");
-				fc = StringUtils.replace(fc, "mvdpf", source + "_move");
+				fc = StringUtils.replace(fc, "hydridesdpf", srcid + "_workflow");
+				fc = StringUtils.replace(fc, "mvdpf", srcid + "_move");
 
-				writeCode(source + "_coordinator.xml", co);
-				writeCode(source + "_workflow.xml", fc);
+				writeCode(srcid + "_coordinator.xml", co);
+				writeCode(srcid + "_workflow.xml", fc);
 
 				System.out.println("oozie script completed ");
 			}

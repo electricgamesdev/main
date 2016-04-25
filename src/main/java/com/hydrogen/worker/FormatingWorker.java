@@ -1,8 +1,10 @@
-package com.hydrogen.core;
+package com.hydrogen.worker;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import com.hydrogen.core.StageManager;
+import com.hydrogen.core.Worker;
 import com.hydrogen.stage.Stage;
 
 public class FormatingWorker extends Worker {

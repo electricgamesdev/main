@@ -24,6 +24,15 @@ public abstract class Model {
 	private transient String ref=null;
 	private transient String as=null;
 	private String type=null;
+	private String component=null;
+	
+	public String getComponent() {
+		return component;
+	}
+	
+	public void setComponent(String component) {
+		this.component = component;
+	}
 	
 	public String getName() {
 		return name;

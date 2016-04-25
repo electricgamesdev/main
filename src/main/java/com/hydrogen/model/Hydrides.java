@@ -11,19 +11,17 @@ public class Hydrides extends Model {
 
 	@OneToMany(mappedBy = "hydrides")
 	private List<Source> sources = new ArrayList<Source>();
-	
+
 	@OneToMany(mappedBy = "hydrides")
 	private List<Template> components = new ArrayList<Template>();
-	
+
 	@OneToMany(mappedBy = "hydrides")
 	private List<Workflow> workflows = new ArrayList<Workflow>();
 
 	private String domainPath = null;
-	private String prototypePath=null;
+	private String prototypePath = null;
 	private String piplinePath = null;
-	
-	
-	
+
 	public String getDomainPath() {
 		return domainPath;
 	}
@@ -74,8 +72,9 @@ public class Hydrides extends Model {
 
 	@Override
 	public String toString() {
-		return "Hydrides [path=" + getPath() + ", sources=" + sources + ", components=" + components + ", workflows="
-				+ workflows + "]";
+		return "Hydrides [sources=" + sources + ", components=" + components + ", workflows=" + workflows
+				+ ", domainPath=" + domainPath + ", prototypePath=" + prototypePath + ", piplinePath=" + piplinePath
+				+ "]";
 	}
 
 }

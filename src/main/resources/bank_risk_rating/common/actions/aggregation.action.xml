@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action>
+	<task type="validation">
+		<rule ref="integrity">
+			<entity ref="act"/>
+		</rule> 
+		<result type="append">
+			<entity ref="file_errors">
+				<field name="checkType">Record Count and Checksum</field>
+				<field name="expectedValue">
+					<field name="recordcount" entity="act_ctl" />
+				</field>
+				<field name="receivedValue">
+					<field ref="ct" entity="act_count_sum" />
+				</field>
+				<field name="status">Failed</field>
+			</entity>
+		</result>
+	</task>
+</action>

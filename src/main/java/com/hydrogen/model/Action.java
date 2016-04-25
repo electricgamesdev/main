@@ -37,7 +37,7 @@ public class Action extends Model{
 	public List<Task> getTasks() {
 		return tasks;
 	}
-	public void addTasks(Task e) {
+	public void addTask(Task e) {
 		this.tasks.add(e);
 	}
 	public List<Form> getForms() {
