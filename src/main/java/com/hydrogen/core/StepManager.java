@@ -18,35 +18,35 @@ import org.apache.oozie.client.OozieClient;
 
 import com.hydrogen.jpa.DBUtil;
 import com.hydrogen.jpa.ObjUtil;
-import com.hydrogen.stage.Dimension;
-import com.hydrogen.stage.Ingestion;
-import com.hydrogen.stage.Stage;
-import com.hydrogen.stage.Stage.TYPE;
-import com.hydrogen.worker.AnalyticsWorker;
-import com.hydrogen.worker.DimensionWorker;
-import com.hydrogen.worker.FormatingWorker;
-import com.hydrogen.worker.IngestionWorker;
-import com.hydrogen.worker.PresentationWorker;
-import com.hydrogen.worker.ValidationWorker;
-import com.hydrogen.stage.Validation;
+import com.hydrogen.model.stage.Dimension;
+import com.hydrogen.model.stage.Ingestion;
+import com.hydrogen.model.stage.Stage;
+import com.hydrogen.model.stage.Validation;
+import com.hydrogen.model.stage.Stage.TYPE;
+import com.hydrogen.steps.DiscoverStep;
+import com.hydrogen.steps.DimensionStep;
+import com.hydrogen.steps.IngestionStep;
+import com.hydrogen.steps.PresentationStep;
+import com.hydrogen.steps.TemplatingStep;
+import com.hydrogen.steps.ValidationStep;
 
-public class StageManager {
+public class StepManager {
 
-	List<Worker> pool = new ArrayList<Worker>();
+	List<Step> pool = new ArrayList<Step>();
 	ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(6);
 
-	public StageManager() {
+	public StepManager() {
 
 	}
 
 	public void start() throws InterruptedException {
 
-		addWorker(new IngestionWorker(this));
-		addWorker(new ValidationWorker(this));
-		addWorker(new AnalyticsWorker(this));
-		addWorker(new DimensionWorker(this));
-		addWorker(new FormatingWorker(this));
-		addWorker(new PresentationWorker(this));
+		addWorker(new IngestionStep(this));
+		addWorker(new ValidationStep(this));
+		addWorker(new DiscoverStep(this));
+		addWorker(new DimensionStep(this));
+		addWorker(new TemplatingStep(this));
+		addWorker(new PresentationStep(this));
 
 	}
 
@@ -54,7 +54,7 @@ public class StageManager {
 		return scheduledThreadPool.shutdownNow();
 	}
 
-	private void addWorker(Worker worker) {
+	private void addWorker(Step worker) {
 		ScheduledFuture f = scheduledThreadPool.scheduleAtFixedRate(worker, 10, 10, TimeUnit.SECONDS);
 		pool.add(worker);
 	}
@@ -148,7 +148,7 @@ public class StageManager {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		StageManager manager = new StageManager();
+		StepManager manager = new StepManager();
 		manager.start();
 	}
 
@@ -157,7 +157,7 @@ public class StageManager {
 		return null;
 	}
 
-	public void error(Worker worker, Throwable th) {
+	public void error(Step worker, Throwable th) {
 		th.printStackTrace();
 
 	}

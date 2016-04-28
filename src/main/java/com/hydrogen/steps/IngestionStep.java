@@ -1,4 +1,4 @@
-package com.hydrogen.worker;
+package com.hydrogen.steps;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,21 +8,21 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hydrogen.core.StageManager;
-import com.hydrogen.core.Worker;
+import com.hydrogen.core.StepManager;
+import com.hydrogen.core.Step;
 import com.hydrogen.jpa.DBUtil;
-import com.hydrogen.model.Entity;
-import com.hydrogen.model.Source;
-import com.hydrogen.stage.Ingestion;
-import com.hydrogen.stage.Stage;
-import com.hydrogen.stage.Stage.TYPE;
+import com.hydrogen.model.stage.Ingestion;
+import com.hydrogen.model.stage.Stage;
+import com.hydrogen.model.stage.Stage.TYPE;
+import com.hydrogen.model.xml.Entity;
+import com.hydrogen.model.xml.Source;
 
-public class IngestionWorker extends Worker {
+public class IngestionStep extends Step {
 
-	private StageManager manager = null;
+	private StepManager manager = null;
 	private Map<String, Object> where = null;
 
-	public IngestionWorker(StageManager manager) {
+	public IngestionStep(StepManager manager) {
 		super(manager);
 		this.where = new HashMap<String, Object>();
 		where.put("status", Stage.STATUS.RUNNING);
@@ -74,6 +74,12 @@ public class IngestionWorker extends Worker {
 
 		}
 
+	}
+
+	@Override
+	public void setup() {
+		
+		
 	}
 
 }

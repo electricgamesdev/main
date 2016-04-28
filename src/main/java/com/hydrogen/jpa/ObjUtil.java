@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.hydrogen.model.Source;
+import com.hydrogen.model.xml.Source;
 
 public class ObjUtil {
 

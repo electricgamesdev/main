@@ -10,7 +10,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import com.hydrogen.stage.Ingestion;
+import com.hydrogen.model.stage.Ingestion;
 
 public class DBUtil {
 

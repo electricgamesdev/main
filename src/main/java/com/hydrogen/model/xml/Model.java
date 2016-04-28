@@ -1,4 +1,4 @@
-package com.hydrogen.model;
+package com.hydrogen.model.xml;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

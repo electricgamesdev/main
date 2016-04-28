@@ -13,12 +13,12 @@
 		<class>com.hydrogen.model.Form</class>
 		<class>com.hydrogen.model.Action</class>
 		<class>com.hydrogen.model.Rules</class>
-		<class>com.hydrogen.stage.Analytics</class>
-		<class>com.hydrogen.stage.Dimension</class>
-		<class>com.hydrogen.stage.Formating</class>
-		<class>com.hydrogen.stage.Ingestion</class>
-		<class>com.hydrogen.stage.Presentation</class>
-		<class>com.hydrogen.stage.Validation</class>
+		<class>com.hydrogen.model.stage.Analytics</class>
+		<class>com.hydrogen.model.stage.Dimension</class>
+		<class>com.hydrogen.model.stage.Formating</class>
+		<class>com.hydrogen.model.stage.Ingestion</class>
+		<class>com.hydrogen.model.stage.Presentation</class>
+		<class>com.hydrogen.model.stage.Validation</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/H2O?serverTimezone=UTC" />

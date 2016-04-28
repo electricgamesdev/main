@@ -19,9 +19,9 @@ import com.hydrogen.core.Engine;
 import com.hydrogen.core.HydridesContext;
 import com.hydrogen.core.HydridesContextException;
 import com.hydrogen.core.HydrogenEngine;
-import com.hydrogen.model.Entity;
-import com.hydrogen.model.Hydrides;
-import com.hydrogen.model.Source;
+import com.hydrogen.model.xml.Entity;
+import com.hydrogen.model.xml.Hydrides;
+import com.hydrogen.model.xml.Source;
 
 public class FlumeEngine extends AbstractEngine {
 

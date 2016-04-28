@@ -16,11 +16,11 @@ import com.hydrogen.jpa.DBUtil;
 import com.hydrogen.model.stage.Stage;
 import com.hydrogen.model.stage.Validation;
 
-public class ValidationStep extends Step {
+public class BackupStep extends Step {
 
 	private Map<String, Object> where = null;
 
-	public ValidationStep(StepManager manager) {
+	public BackupStep(StepManager manager) {
 		super(manager);
 		this.where = new HashMap<String, Object>();
 		where.put("status", Stage.STATUS.INIT);

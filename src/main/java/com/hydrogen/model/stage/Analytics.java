@@ -1,10 +1,10 @@
-package com.hydrogen.stage;
+package com.hydrogen.model.stage;
 
 
 import javax.persistence.ManyToOne;
 
-import com.hydrogen.model.Entity;
-import com.hydrogen.model.Source;
+import com.hydrogen.model.xml.Entity;
+import com.hydrogen.model.xml.Source;
 
 @javax.persistence.Entity
 public class Analytics extends Stage {

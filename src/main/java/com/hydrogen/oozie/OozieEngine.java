@@ -7,8 +7,8 @@ import org.apache.commons.lang.StringUtils;
 
 import com.hydrogen.core.AbstractEngine;
 import com.hydrogen.core.HydridesContext;
-import com.hydrogen.model.Entity;
-import com.hydrogen.model.Source;
+import com.hydrogen.model.xml.Entity;
+import com.hydrogen.model.xml.Source;
 
 public class OozieEngine extends AbstractEngine {
 

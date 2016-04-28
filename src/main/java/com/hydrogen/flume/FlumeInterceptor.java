@@ -27,10 +27,10 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.hydrogen.jpa.DBUtil;
-import com.hydrogen.model.Entity;
-import com.hydrogen.model.Source;
-import com.hydrogen.stage.Ingestion;
-import com.hydrogen.stage.Stage;
+import com.hydrogen.model.stage.Ingestion;
+import com.hydrogen.model.stage.Stage;
+import com.hydrogen.model.xml.Entity;
+import com.hydrogen.model.xml.Source;
 
 public class FlumeInterceptor implements Interceptor {
 

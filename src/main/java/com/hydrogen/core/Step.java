@@ -1,14 +1,14 @@
 package com.hydrogen.core;
 
-public abstract class Worker implements Runnable {
+public abstract class Step implements Runnable {
 
-	private StageManager manager = null;
+	private StepManager manager = null;
 
-	public Worker(StageManager manager) {
+	public Step(StepManager manager) {
 		this.manager = manager;
 	}
 	
-	public StageManager getManager() {
+	public StepManager getManager() {
 		return manager;
 	}
 
@@ -22,6 +22,7 @@ public abstract class Worker implements Runnable {
 		}
 	}
 
+	public abstract void setup();
 	public abstract void work();
 
 	public void done() {

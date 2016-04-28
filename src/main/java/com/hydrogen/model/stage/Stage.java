@@ -1,4 +1,4 @@
-package com.hydrogen.stage;
+package com.hydrogen.model.stage;
 
 import java.sql.Timestamp;
 

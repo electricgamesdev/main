@@ -16,11 +16,11 @@ import com.hydrogen.jpa.DBUtil;
 import com.hydrogen.model.stage.Analytics;
 import com.hydrogen.model.stage.Stage;
 
-public class DiscoverStep extends Step {
+public class DigestStep extends Step {
 
 	private Map<String, Object> where = null;
 
-	public DiscoverStep(StepManager manager) {
+	public DigestStep(StepManager manager) {
 		super(manager);
 		this.where = new HashMap<String, Object>();
 		where.put("status", Stage.STATUS.INIT);

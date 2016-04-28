@@ -1,4 +1,4 @@
-package com.hydrogen.model;
+package com.hydrogen.model.xml;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,14 +13,44 @@ public class Hydrides extends Model {
 	private List<Source> sources = new ArrayList<Source>();
 
 	@OneToMany(mappedBy = "hydrides")
-	private List<Template> components = new ArrayList<Template>();
+	private List<Template> templates = new ArrayList<Template>();
 
 	@OneToMany(mappedBy = "hydrides")
 	private List<Workflow> workflows = new ArrayList<Workflow>();
 
 	private String domainPath = null;
 	private String prototypePath = null;
-	private String piplinePath = null;
+	private String pipelinePath = null;
+
+	private String domainType=null;
+	private String prototypeType = null;
+	private String pipelineType = null;
+	
+	
+	
+	public String getDomainType() {
+		return domainType;
+	}
+
+	public void setDomainType(String domainType) {
+		this.domainType = domainType;
+	}
+
+	public String getPrototypeType() {
+		return prototypeType;
+	}
+
+	public void setPrototypeType(String prototypeType) {
+		this.prototypeType = prototypeType;
+	}
+
+	public String getPipelineType() {
+		return pipelineType;
+	}
+
+	public void setPipelineType(String piplineType) {
+		this.pipelineType = piplineType;
+	}
 
 	public String getDomainPath() {
 		return domainPath;
@@ -38,12 +68,12 @@ public class Hydrides extends Model {
 		this.prototypePath = prototypePath;
 	}
 
-	public String getPiplinePath() {
-		return piplinePath;
+	public String getPipelinePath() {
+		return pipelinePath;
 	}
 
-	public void setPiplinePath(String piplinePath) {
-		this.piplinePath = piplinePath;
+	public void setPipelinePath(String piplinePath) {
+		this.pipelinePath = piplinePath;
 	}
 
 	public void addWorkflow(Workflow obj) {
@@ -54,12 +84,12 @@ public class Hydrides extends Model {
 		return workflows;
 	}
 
-	public void addComponent(Template obj) {
-		components.add(obj);
+	public void addTemplate(Template obj) {
+		templates.add(obj);
 	}
 
-	public List<Template> getComponents() {
-		return components;
+	public List<Template> getTemplates() {
+		return templates;
 	}
 
 	public void addSource(Source source) {
@@ -72,8 +102,8 @@ public class Hydrides extends Model {
 
 	@Override
 	public String toString() {
-		return "Hydrides [sources=" + sources + ", components=" + components + ", workflows=" + workflows
-				+ ", domainPath=" + domainPath + ", prototypePath=" + prototypePath + ", piplinePath=" + piplinePath
+		return "Hydrides [sources=" + sources + ", components=" + templates + ", workflows=" + workflows
+				+ ", domainPath=" + domainPath + ", prototypePath=" + prototypePath + ", piplinePath=" + pipelinePath
 				+ "]";
 	}
 
