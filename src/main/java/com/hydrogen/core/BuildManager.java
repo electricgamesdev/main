@@ -1,13 +1,10 @@
 package com.hydrogen.core;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -43,7 +40,7 @@ public class BuildManager extends AbstractMojo {
 
 			context.setTargetDir(dir);
 			context.setLog(getLog());
-			HydrogenEngine engine = HydrogenEngine.getEngine(context);
+			CoderEngine engine = CoderEngine.getEngine(context);
 			
 			engine.build();
 

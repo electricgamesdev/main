@@ -7,7 +7,7 @@ import com.hydrogen.model.xml.Entity;
 import com.hydrogen.model.xml.Source;
 
 @javax.persistence.Entity
-public class Presentation extends Step {
+public class Digest extends Step {
 	
 	@ManyToOne
 	private Source source=null;

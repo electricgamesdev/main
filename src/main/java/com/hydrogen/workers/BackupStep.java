@@ -1,4 +1,4 @@
-package com.hydrogen.steps;
+package com.hydrogen.workers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,19 +11,19 @@ import org.apache.oozie.client.OozieClient;
 import org.apache.oozie.client.OozieClientException;
 
 import com.hydrogen.core.StepManager;
-import com.hydrogen.core.Step;
+import com.hydrogen.core.Worker;
 import com.hydrogen.jpa.DBUtil;
-import com.hydrogen.model.stage.Stage;
-import com.hydrogen.model.stage.Validation;
+import com.hydrogen.model.step.Step;
+import com.hydrogen.model.step.Validation;
 
-public class BackupStep extends Step {
+public class BackupStep extends Worker {
 
 	private Map<String, Object> where = null;
 
 	public BackupStep(StepManager manager) {
 		super(manager);
 		this.where = new HashMap<String, Object>();
-		where.put("status", Stage.STATUS.INIT);
+		where.put("status", Step.STATUS.INIT);
 	}
 
 	public void work() {
@@ -36,32 +36,8 @@ public class BackupStep extends Step {
 
 	private void process(List<Validation> ilist) {
 		try {
-			OozieClient wc = new OozieClient(getManager().getEnv("oozie-url"));
-			List<Stage> nlist = new ArrayList<Stage>();
-
-			for (Validation validation : ilist) {
-				CoordinatorJob co = wc.getCoordJobInfo(validation.getRefId());
-				if (co.getStatus() == Status.RUNNING) {
-					validation.setStatus(Stage.STATUS.RUNNING);
-					if (validation.isStatusChanged()) {
-						DBUtil.merge(validation);
-					}
-				} else if (co.getStatus() == Status.SUCCEEDED) {
-					nlist.add(validation);
-				} else if (co.getStatus() == Status.FAILED || co.getStatus() == Status.KILLED
-						|| co.getStatus() == Status.RUNNINGWITHERROR || co.getStatus() == Status.IGNORED
-						|| co.getStatus() == Status.DONEWITHERROR) {
-					validation.setStatus(Stage.STATUS.ERROR);
-					validation.setErrors(co.getStatus().toString());
-					validation.setLog("External Id:" + co.getExternalId() + "\n URL:" + co.getConsoleUrl());
-					DBUtil.merge(validation);
-				}
-			}
-
-			if (nlist.size() > 0) {
-				getManager().nextPhase(Stage.TYPE.VALIDATION, nlist);
-			}
-		} catch (OozieClientException e) {
+			
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
@@ -72,6 +48,12 @@ public class BackupStep extends Step {
 
 	@Override
 	public void setup() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void create(List<Step> dataset) {
 		// TODO Auto-generated method stub
 		
 	}

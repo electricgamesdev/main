@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <action>
-	<task type="join" as="summary_details">
+	<task type="join" as="profiling_details">
 		<execute>
 			<entity ref="ctl" />
 			<entity ref="aggr" />
@@ -8,8 +8,22 @@
 			</condition>
 		</execute>
 		<result>
-			<form ref="profiling_grid" />
-			<form ref="processing_grid" />
+			<form ref="profiling_grid" >
+				<field name="recordcount" entity="act_ctl" />
+			</form>
+		</result>
+	</task>
+	<task type="join" as="issue_details">
+		<execute>
+			<entity ref="ctl" />
+			<entity ref="aggr" />
+			<condition>act.ct=act_ctl.recordcount and act_ctl.checksum!=act.sm
+			</condition>
+		</execute>
+		<result>
+			<form ref="issue_grid" >
+				<field name="recordcount" entity="act_ctl" />
+			</form>
 		</result>
 	</task>
 </action>

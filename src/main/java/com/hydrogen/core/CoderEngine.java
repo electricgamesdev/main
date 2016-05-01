@@ -1,19 +1,20 @@
 package com.hydrogen.core;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-public class HydrogenEngine {
-
+public class CoderEngine {
+	private Log log = LogFactory.getLog(CoderEngine.class);
+	
 	public void build() {
 		for (Object key : econfig.keySet()) {
 			try {
 				Class c = Class.forName(econfig.getProperty(key.toString()));
 				Engine e = (Engine) c.newInstance();
+				log.info("Building "+e.getName());
 				e.setContext(context);
 				e.build();
 			} catch (Exception e) {
@@ -24,25 +25,13 @@ public class HydrogenEngine {
 		}
 	}
 
-	public void execute() {
-		for (Object key : econfig.keySet()) {
-			try {
-				Class c = Class.forName(econfig.getProperty(key.toString()));
-				Engine e = (Engine) c.newInstance();
-				e.setContext(context);
-				e.execute();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 
-		}
-	}
-
-	private HydrogenEngine engine = null;
+	
+	
+	private CoderEngine engine = null;
 	private Properties econfig = new Properties();
-
-	private HydrogenEngine(HydridesContext context) {
+	
+	private CoderEngine(HydridesContext context) {
 		this.context = context;
 		try {
 			econfig.load(Engine.class.getResourceAsStream("engine.properties"));
@@ -53,8 +42,8 @@ public class HydrogenEngine {
 		}
 	}
 
-	public static HydrogenEngine getEngine(HydridesContext context) {
-		return new HydrogenEngine(context);
+	public static CoderEngine getEngine(HydridesContext context) {
+		return new CoderEngine(context);
 	}
 
 	private HydridesContext context;
@@ -62,5 +51,7 @@ public class HydrogenEngine {
 	public HydridesContext getContext() {
 		return context;
 	}
+	
+	
 
 }

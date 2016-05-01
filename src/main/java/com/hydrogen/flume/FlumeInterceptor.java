@@ -27,8 +27,8 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.hydrogen.jpa.DBUtil;
-import com.hydrogen.model.stage.Ingestion;
-import com.hydrogen.model.stage.Stage;
+import com.hydrogen.model.step.Ingestion;
+import com.hydrogen.model.step.Step;
 import com.hydrogen.model.xml.Entity;
 import com.hydrogen.model.xml.Source;
 
@@ -100,9 +100,9 @@ public class FlumeInterceptor implements Interceptor {
 			Ingestion stage = new Ingestion();
 			stage.setRefId(eventId);
 			stage.setDetail(filename);
-			stage.setStatus(Stage.STATUS.INIT);
+			stage.setStatus(Step.STATUS.INIT);
 			stage.setSource(master);
-			stage.setPhase(Stage.PHASE.FLUME);
+			stage.setPhase(Step.PHASE.FLUME);
 
 			for (Entity entity : entitylist) {
 
@@ -129,14 +129,14 @@ public class FlumeInterceptor implements Interceptor {
 
 						log.info("Init----- header matched : " + primary_key);
 
-						stage.setStatus(Stage.STATUS.RUNNING);
+						stage.setStatus(Step.STATUS.RUNNING);
 
 					}
 
 				} catch (Exception e) {
 					e.printStackTrace();
 					stage.setErrors(e.getMessage());
-					stage.setStatus(Stage.STATUS.ERROR);
+					stage.setStatus(Step.STATUS.ERROR);
 					stage.setLog(e.toString());
 				} finally {
 					DBUtil.persist(stage);

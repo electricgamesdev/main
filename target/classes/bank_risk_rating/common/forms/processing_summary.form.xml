@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form>
-	<filter>
-		<entity path="common/entities/get_profiling_filter" as="params"/>
-	</filter>
+	
 	<script type="html" records-per-page="50">
 		<table>
 			<th><td>file</td><td>status</td><td>result</td></th>

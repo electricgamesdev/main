@@ -1,5 +1,6 @@
 package com.hydrogen.oozie;
 
+import java.net.URL;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
@@ -46,11 +47,14 @@ public class OozieEngine extends AbstractEngine {
 					
 					String id = context.getIdInPath(e.getPath());
 
-					String s = IOUtils.toString(OozieEngine.class.getResourceAsStream("ds.xml"));
+					URL dst=getClass().getClassLoader().getResource("ds.xml");
+					System.out.println(dst);
+					String s = IOUtils.toString(dst);
 					s = StringUtils.replace(s, "#1", id);
 					ds.append(StringUtils.replace(s, "#2", id));
 
-					String i = IOUtils.toString(OozieEngine.class.getResourceAsStream("ie.xml"));
+					URL iet=	OozieEngine.class.getResource("ie.xml");
+					String i = IOUtils.toString(iet);
 					i = StringUtils.replace(i, "#1", id + "IN");
 					ie.append(StringUtils.replace(i, "#2", id));
 
@@ -92,6 +96,11 @@ public class OozieEngine extends AbstractEngine {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public String getName() {
+		
+		return "oozie";
 	}
 
 }

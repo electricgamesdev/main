@@ -11,11 +11,13 @@ import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.Executor;
 
-import com.hydrogen.core.AbstractEngine;
-import com.hydrogen.core.HydridesContextException;
-import com.hydrogen.core.HydrogenEngine;
 
-public class HDFSExecutor extends AbstractEngine {
+
+
+
+
+
+public class HDFSExecutor {
 
 	public void execute() {
 		// Remove
@@ -25,14 +27,14 @@ public class HDFSExecutor extends AbstractEngine {
 		rm.addArgument("-R");
 		rm.addArgument("-skipTrash");
 		rm.addArgument("${file}");
-		rm.setSubstitutionMap(getConfigMap());
+	//	rm.setSubstitutionMap(getConfigMap());
 
 		// Remove
 		CommandLine mkdir = new CommandLine("hdfs");
 		mkdir.addArgument("dfs");
 		mkdir.addArgument("-mkdir");
 		mkdir.addArgument("${file}");
-		mkdir.setSubstitutionMap(getConfigMap());
+	//	mkdir.setSubstitutionMap(getConfigMap());
 
 		DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
 
@@ -71,6 +73,11 @@ public class HDFSExecutor extends AbstractEngine {
 	public void build() {
 		// TODO Auto-generated method stub
 
+	}
+
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

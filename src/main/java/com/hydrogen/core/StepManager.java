@@ -1,52 +1,55 @@
 package com.hydrogen.core;
 
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import javax.persistence.criteria.CriteriaBuilder.In;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import org.apache.oozie.client.OozieClient;
-
-import com.hydrogen.jpa.DBUtil;
-import com.hydrogen.jpa.ObjUtil;
-import com.hydrogen.model.stage.Dimension;
-import com.hydrogen.model.stage.Ingestion;
-import com.hydrogen.model.stage.Stage;
-import com.hydrogen.model.stage.Validation;
-import com.hydrogen.model.stage.Stage.TYPE;
-import com.hydrogen.steps.DiscoverStep;
-import com.hydrogen.steps.DimensionStep;
-import com.hydrogen.steps.IngestionStep;
-import com.hydrogen.steps.PresentationStep;
-import com.hydrogen.steps.TemplatingStep;
-import com.hydrogen.steps.ValidationStep;
+import com.hydrogen.model.step.Step;
 
 public class StepManager {
+	private Log log = LogFactory.getLog(StepManager.class);
 
-	List<Step> pool = new ArrayList<Step>();
+	Map<Integer, Worker> pool = new HashMap<Integer, Worker>();
 	ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(6);
+	private Properties wconfig = new Properties();
+	private Properties econfig = new Properties();
 
 	public StepManager() {
-
+		try {
+			wconfig.load(Worker.class.getResourceAsStream("worker.properties"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void start() throws InterruptedException {
+		for (Object key : wconfig.keySet()) {
+			try {
+				Class c = Class.forName(wconfig.getProperty(key.toString()));
+				Constructor<Worker> c2 = c.getConstructor(StepManager.class);
+				Worker w = (Worker) c2.newInstance(this);
+				// e.setContext(context);
+				log.info("Starting " + w.getClass().getSimpleName());
+				pool.put(Integer.parseInt(key.toString()), w);
+				w.setId(Integer.parseInt(key.toString()));
+				startWorker(w);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-		addWorker(new IngestionStep(this));
-		addWorker(new ValidationStep(this));
-		addWorker(new DiscoverStep(this));
-		addWorker(new DimensionStep(this));
-		addWorker(new TemplatingStep(this));
-		addWorker(new PresentationStep(this));
+		}
 
 	}
 
@@ -54,96 +57,15 @@ public class StepManager {
 		return scheduledThreadPool.shutdownNow();
 	}
 
-	private void addWorker(Step worker) {
+	private void startWorker(Worker worker) {
 		ScheduledFuture f = scheduledThreadPool.scheduleAtFixedRate(worker, 10, 10, TimeUnit.SECONDS);
-		pool.add(worker);
-	}
-
-	public void nextPhase(TYPE currentPhase, List<Stage> dataset) {
-
-		if (Stage.TYPE.INGESTION.equals(currentPhase)) {
-
-			startValidation(dataset);
-		}
-
-		if (Stage.TYPE.VALIDATION.equals(currentPhase)) {
-			// run crunch jobs
-			startAnalytics(dataset);
-		}
-		if (Stage.TYPE.ANALYTICS.equals(currentPhase)) {
-			// populate data to hbase
-			startDimension(dataset);
-		}
-
-		if (Stage.TYPE.PRESENTATION.equals(currentPhase)) {
-			// formating to stream data using spark
-			startFormating(dataset);
-		}
-		if (Stage.TYPE.FORMATION.equals(currentPhase)) {
-			// watch and connect with servlet for faster rendering
-			startPresentation(dataset);
-		}
 
 	}
 
-	private void startPresentation(List<Stage> dataset) {
+	public void nextStep(Worker wold, List<Step> dataset) {
 
-	}
-
-	private void startFormating(List<Stage> dataset) {
-
-	}
-
-	private void startDimension(List<Stage> dataset) {
-
-	}
-
-	private void startAnalytics(List<Stage> dataset) {
-
-	}
-
-	private void startValidation(List<Stage> dataset) {
-
-		Validation validation = new Validation();
-		try {
-			Properties p = new Properties();
-			Ingestion master = (Ingestion) dataset.get(0);
-
-			validation.setSource(master.getSource());
-			validation.setStatus(Stage.STATUS.INIT);
-			validation.setStartTime(ObjUtil.now());
-			p.load(new FileReader(System.getenv("user.home") + File.separator + "hydrogen" + File.separator
-					+ master.getSource().getName() + ".properties"));
-			for (Stage s : dataset) {
-				Ingestion ing = (Ingestion) s;
-				p.setProperty(ing.getEntity().getName(), ing.getName());
-			}
-			OozieClient wc = new OozieClient(p.getProperty("oozie.url"));
-
-			// create a workflow job configuration and set the workflow
-			// application path
-			Properties conf = wc.createConfiguration();
-			for (Object key : p.keySet()) {
-				conf.put(key, p.getProperty(key.toString()));
-			}
-
-			// submit and start the workflow job
-			String jobId = wc.run(conf);
-			validation.setRefId(jobId);
-
-		} catch (Exception e) {
-			validation.setErrors(e.getMessage());
-			validation.setLog(e.toString());
-			validation.setStatus(Stage.STATUS.ERROR);
-		} finally {
-
-			DBUtil.persist(validation);
-			for (Stage s : dataset) {
-				Ingestion ing = (Ingestion) s;
-				s.setNextPhase(validation);
-				DBUtil.merge(ing);
-			}
-		}
+		Worker wnew = pool.get(wold.getId() + 1);
+		wnew.create(dataset);
 	}
 
 	public static void main(String[] args) throws InterruptedException {
@@ -157,7 +79,7 @@ public class StepManager {
 		return null;
 	}
 
-	public void error(Step worker, Throwable th) {
+	public void error(com.hydrogen.core.Worker step, Throwable th) {
 		th.printStackTrace();
 
 	}

@@ -55,8 +55,8 @@ public class HydridesContext {
 			if (hydrides == null) {
 				Digester digester = new Digester();
 				digester.setValidating(false);
-				digester.addObjectCreate("hydrides", "com.hydrogen.model.Hydrides");
-				digester.addSetProperties("hydrides","path","path");
+				digester.addObjectCreate("hydrides", "com.hydrogen.model.xml.Hydrides");
+				digester.addSetProperties("hydrides","namespace","namespace");
 				digester.addSetProperties("hydrides/domain", "path", "domainPath");
 				digester.addSetProperties("hydrides/prototype", "path", "prototypePath");
 				digester.addSetProperties("hydrides/pipeline", "path", "pipelinePath");
@@ -65,27 +65,27 @@ public class HydridesContext {
 				digester.addSetProperties("hydrides/pipeline", "type", "pipelineType");
 
 				// sources
-				digester.addObjectCreate("hydrides/domain/source", "com.hydrogen.model.Source");
+				digester.addObjectCreate("hydrides/domain/source", "com.hydrogen.model.xml.Source");
 				digester.addSetProperties("hydrides/domain/source");
-				digester.addSetNext("hydrides/domain/source", "addSource", "com.hydrogen.model.Hydrides");
+				digester.addSetNext("hydrides/domain/source", "addSource", "com.hydrogen.model.xml.Hydrides");
 
-				digester.addObjectCreate("hydrides/domain/source/workflow", "com.hydrogen.model.Workflow");
+				digester.addObjectCreate("hydrides/domain/source/workflow", "com.hydrogen.model.xml.Workflow");
 				digester.addSetProperties("hydrides/domain/source/workflow");
-				digester.addSetNext("hydrides/domain/source/workflow", "addWorkflow", "com.hydrogen.model.Source");
+				digester.addSetNext("hydrides/domain/source/workflow", "addWorkflow", "com.hydrogen.model.xml.Source");
 
 				// workflow
-				digester.addObjectCreate("hydrides/pipeline/workflow", "com.hydrogen.model.Workflow");
+				digester.addObjectCreate("hydrides/pipeline/workflow", "com.hydrogen.model.xml.Workflow");
 				digester.addSetProperties("hydrides/pipeline/workflow");
-				digester.addSetNext("hydrides/pipeline/workflow", "addWorkflow", "com.hydrogen.model.Hydrides");
+				digester.addSetNext("hydrides/pipeline/workflow", "addWorkflow", "com.hydrogen.model.xml.Hydrides");
 
 				// components
-				digester.addObjectCreate("hydrides/prototype/template", "com.hydrogen.model.Template");
+				digester.addObjectCreate("hydrides/prototype/template", "com.hydrogen.model.xml.Template");
 				digester.addSetProperties("hydrides/prototype/template");
-				digester.addSetNext("hydrides/prototype/template", "addTemplate", "com.hydrogen.model.Hydrides");
+				digester.addSetNext("hydrides/prototype/template", "addTemplate", "com.hydrogen.model.xml.Hydrides");
 				
-				digester.addObjectCreate("hydrides/prototype/template/workflow", "com.hydrogen.model.Workflow");
+				digester.addObjectCreate("hydrides/prototype/template/workflow", "com.hydrogen.model.xml.Workflow");
 				digester.addSetProperties("hydrides/prototype/template/workflow");
-				digester.addSetNext("hydrides/prototype/template/workflow", "addWorkflow", "com.hydrogen.model.Template");
+				digester.addSetNext("hydrides/prototype/template/workflow", "addWorkflow", "com.hydrogen.model.xml.Template");
 				
 				hydrides = digester.parse(xml);
 
@@ -96,15 +96,15 @@ public class HydridesContext {
 				File pipp = new File(appPath + File.separator + hydrides.getPipelinePath() + File.separator);
 
 				
-				appPath = appPath + File.separator +  hydrides.getPath()  + File.separator;
+				appPath = appPath + File.separator +  hydrides.getNamespace()  + File.separator;
 
 				
-				domainProperties
-						.load(new FileInputStream(domp.getPath() +File.separator+ hydrides.getDomainType() + ".properties"));
-				pipelineProperties.load(
-						new FileInputStream(pipp.getPath()+File.separator + hydrides.getPrototypeType() + ".properties"));
-				prototypeProperties
-						.load(new FileInputStream(prop.getPath()+File.separator + hydrides.getPipelineType() + ".properties"));
+				//domainProperties
+					//	.load(new FileInputStream(domp.getPath() +File.separator+ hydrides.getDomainType() + ".properties"));
+				//pipelineProperties.load(
+					//	new FileInputStream(pipp.getPath()+File.separator + hydrides.getPrototypeType() + ".properties"));
+				//prototypeProperties
+					//	.load(new FileInputStream(prop.getPath()+File.separator + hydrides.getPipelineType() + ".properties"));
 
 				for (Source s : hydrides.getSources()) {
 					addComp(s, domp);
@@ -146,7 +146,7 @@ public class HydridesContext {
 					if (a.exists()) {
 						components.put(c[i], a);
 					}else{
-						System.err.println(a+" component is missing");
+					//	System.err.println(a+" component is missing");
 					}
 				}
 			}
@@ -179,9 +179,9 @@ public class HydridesContext {
 
 	private void add(Digester digester, String path, Class cls) throws HydridesContextException {
 		try {
-
-			pool.put(path,
-					digester.parse(appPath + File.separator + path + "." + cls.getSimpleName().toLowerCase() + ".xml"));
+			String s=appPath  + path + "." + cls.getSimpleName().toLowerCase() + ".xml";
+			log.info("Loading "+s);
+			pool.put(path,digester.parse(s));
 		} catch (Exception e) {
 
 			throw new HydridesContextException(e.getMessage(), e);
@@ -263,7 +263,7 @@ public class HydridesContext {
 			Digester digester = getDigester(Form.class);
 			map(digester, "form/filter/entity", Entity.class, Form.class);
 			map(digester, "form/script", Script.class, Form.class);
-			add(digester, path, Entity.class);
+			add(digester, path, Form.class);
 
 		}
 		return (Form) pool.get(path);
@@ -299,26 +299,24 @@ public class HydridesContext {
 		URL xml = new File("/home/wafiq/workspace/hydrogen/src/main/resources/bank_risk_rating.hydrides.xml").toURL();
 		HydridesContext context = new HydridesContext(xml);
 
-		System.out.println(context.getAppName());
+	
 		Hydrides h = context.getHydrides();
 
-		System.out.println("Stage 1 Validation: Anlyzing Hydrides and Its dependecies " + h);
+		System.out.println("----- 1.Loading all models");
 		for (Source s : h.getSources()) {
 			Source s1 = context.getSource(s.getPath());
-			System.out.println(s1);
+			
 		}
 
 		for (Template s : h.getTemplates()) {
 			Template s1 = context.getTemplate(s.getPath());
-			System.out.println(s1);
+			
 		}
 
 		for (Workflow s : h.getWorkflows()) {
 			Workflow s1 = context.getWorkflow(s.getPath());
-			System.out.println(s1);
 		}
 
-		System.out.println("Stage 2 Validation: Analyzing Middle level components and Its dependecies");
 		for (Source s : h.getSources()) {
 			Source s1 = context.getSource(s.getPath());
 			for (Entity e : s1.getEntities()) {

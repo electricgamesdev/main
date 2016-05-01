@@ -1,4 +1,4 @@
-package com.hydrogen.model.stage;
+package com.hydrogen.model.step;
 
 import java.sql.Timestamp;
 
@@ -8,18 +8,22 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public abstract class Stage {
+public abstract class Step {
 
 	public enum STATUS {
-		INIT, RUNNING, STOPPED, KILLED, ERROR, COMPLETED
+		INIT, RUNNING, STOPPED, KILLED, ERROR, COMPLETED, SUSPENDED
+	}
+	
+	public enum STATE {
+		APPROVED,DECESION,REJECTED,DEFAULT_SLA
 	}
 
 	public enum PHASE {
-		FLUME, OOZIE, CRUNCH, HIVE, SPARK, HBASE, CACHE
+		FLUME, OOZIE, CRUNCH, HIVE, SPARK, HBASE, DROOLS,VELOCITY
 	}
 
 	public enum TYPE {
-		INGESTION, VALIDATION, ANALYTICS, DIMENSION, FORMATION, PRESENTATION
+		INGESTION,BACKUP,DISCOVERING, VALIDATION,STORAGE,ROUTING,EXECUTION,AGGREGATION,SWITCHING, DIMENSION, DIGEST, INTERERCPTING
 	}
 
 	@Id
@@ -34,23 +38,23 @@ public abstract class Stage {
 	private String errors = null;
 	private String log = null;
 	private String name = null;
-	private Stage nextPhase = null;
-	private Stage prevPhase = null;
+	private Step nextPhase = null;
+	private Step prevPhase = null;
 	private transient boolean statusChanged = false;
 
-	public Stage getPrevPhase() {
+	public Step getPrevPhase() {
 		return prevPhase;
 	}
 
-	public void setPrevPhase(Stage prevPhase) {
+	public void setPrevPhase(Step prevPhase) {
 		this.prevPhase = prevPhase;
 	}
 
-	public Stage getNextPhase() {
+	public Step getNextPhase() {
 		return nextPhase;
 	}
 
-	public void setNextPhase(Stage nextPhase) {
+	public void setNextPhase(Step nextPhase) {
 		this.nextPhase = nextPhase;
 	}
 

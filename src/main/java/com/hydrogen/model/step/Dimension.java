@@ -1,4 +1,4 @@
-package com.hydrogen.model.stage;
+package com.hydrogen.model.step;
 
 
 import javax.persistence.ManyToOne;
@@ -7,7 +7,7 @@ import com.hydrogen.model.xml.Entity;
 import com.hydrogen.model.xml.Source;
 
 @javax.persistence.Entity
-public class Dimension extends Stage {
+public class Dimension extends Step {
 	
 	@ManyToOne
 	private Source source=null;

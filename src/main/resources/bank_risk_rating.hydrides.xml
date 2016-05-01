@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<hydrides path="bank_risk_rating">
+<hydrides namespace="bank_risk_rating">
 	<domain type="flume" path="config">
 		<source path="sources/cards" component="flume_file.conf" as="cards">
 			<workflow ref="dpf" />
@@ -8,17 +8,18 @@
 			<workflow ref="dpf" />
 		</source>
 	</domain>
-	<prototype type="html" path="html">
-		<template path="components/profiling_summary" component="dpf_summary.html" as="summary">
-			<workflow ref="dpf" />
-			<workflow ref="rewrite" />
-		</template>
-		<template path="components/issue_summary" component="issue_summary.html" as="issues">
-			<workflow ref="dpf" />
-		</template>
-	</prototype>
-	<pipeline type="drools" path="rules">
+	<pipeline type="drools" path="rules3">
 		<workflow path="workflows/data_profiling" component="integrity.xsl,enrichment.xsl" as="dpf" />
 		<workflow path="workflows/rewrite_process" component="rewrite.xsl" as="rewrite" />
 	</pipeline>
+	<prototype type="html" path="html">
+		<template path="templates/profiling_summary" component="dpf_summary.html" as="summary">
+			<workflow ref="dpf" />
+			<workflow ref="rewrite" />
+		</template>
+		<template path="templates/issue_summary" component="issue_summary.html" as="issues">
+			<workflow ref="dpf" />
+		</template>
+	</prototype>
+	
 </hydrides>

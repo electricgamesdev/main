@@ -14,6 +14,17 @@ public class Template extends Model {
 	
 	@OneToMany(mappedBy="template")
 	private List<Form> forms = new ArrayList<Form>();
+	
+	private List<Action> actions = new ArrayList<Action>();
+	
+	public List<Action> getActions() {
+		return actions;
+	}
+	
+	public void addAction(Action action) {
+		this.actions.add(action);
+	}
+	
 
 	@ManyToOne
 	private Hydrides hydrides = null;

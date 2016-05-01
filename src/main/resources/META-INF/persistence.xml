@@ -5,20 +5,19 @@
 	<persistence-unit name="H2O" transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
-		<class>com.hydrogen.model.Hydrides</class>
-		<class>com.hydrogen.model.Source</class>
-		<class>com.hydrogen.model.Component</class>
-		<class>com.hydrogen.model.Workflow</class>
-		<class>com.hydrogen.model.Entity</class>
-		<class>com.hydrogen.model.Form</class>
-		<class>com.hydrogen.model.Action</class>
-		<class>com.hydrogen.model.Rules</class>
-		<class>com.hydrogen.model.stage.Analytics</class>
-		<class>com.hydrogen.model.stage.Dimension</class>
-		<class>com.hydrogen.model.stage.Formating</class>
-		<class>com.hydrogen.model.stage.Ingestion</class>
-		<class>com.hydrogen.model.stage.Presentation</class>
-		<class>com.hydrogen.model.stage.Validation</class>
+		<class>com.hydrogen.model.xml.Hydrides</class>
+		<class>com.hydrogen.model.xml.Source</class>
+		<class>com.hydrogen.model.xml.Template</class>
+		<class>com.hydrogen.model.xml.Workflow</class>
+		<class>com.hydrogen.model.xml.Entity</class>
+		<class>com.hydrogen.model.xml.Form</class>
+		<class>com.hydrogen.model.xml.Action</class>
+		<class>com.hydrogen.model.xml.Rules</class>
+		<class>com.hydrogen.model.step.Dimension</class>
+		<class>com.hydrogen.model.step.Formating</class>
+		<class>com.hydrogen.model.step.Ingestion</class>
+		<class>com.hydrogen.model.step.Presentation</class>
+		<class>com.hydrogen.model.step.Validation</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/H2O?serverTimezone=UTC" />

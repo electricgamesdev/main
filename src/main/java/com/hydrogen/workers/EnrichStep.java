@@ -8,12 +8,12 @@ import com.hydrogen.core.StepManager;
 import com.hydrogen.core.Worker;
 import com.hydrogen.model.step.Step;
 
-public class TemplatingStep extends Worker {
+public class EnrichStep extends Worker {
 
 
 	private Map<String, Object> where = null;
 
-	public TemplatingStep(StepManager manager) {
+	public EnrichStep(StepManager manager) {
 		super(manager);
 		this.where = new HashMap<String, Object>();
 		where.put("status", Step.STATUS.INIT);

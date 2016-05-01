@@ -3,7 +3,6 @@ package com.hydrogen.flume;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
@@ -11,14 +10,11 @@ import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.Executor;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import com.hydrogen.core.AbstractEngine;
-import com.hydrogen.core.Engine;
 import com.hydrogen.core.HydridesContext;
 import com.hydrogen.core.HydridesContextException;
-import com.hydrogen.core.HydrogenEngine;
 import com.hydrogen.model.xml.Entity;
 import com.hydrogen.model.xml.Hydrides;
 import com.hydrogen.model.xml.Source;
@@ -156,6 +152,11 @@ public class FlumeEngine extends AbstractEngine {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+	}
+
+	public String getName() {
+		
+		return "flume";
 	}
 
 }

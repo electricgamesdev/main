@@ -26,7 +26,15 @@ public class Hydrides extends Model {
 	private String prototypeType = null;
 	private String pipelineType = null;
 	
+	private String namespace = null;
 	
+	public String getNamespace() {
+		return namespace;
+	}
+	
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
+	}
 	
 	public String getDomainType() {
 		return domainType;

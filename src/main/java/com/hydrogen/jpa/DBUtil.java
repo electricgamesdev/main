@@ -1,5 +1,6 @@
 package com.hydrogen.jpa;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -10,9 +11,14 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import com.hydrogen.model.stage.Ingestion;
+import com.hydrogen.model.step.Ingestion;
 
 public class DBUtil {
+	
+	public static Timestamp now() {
+
+		return new Timestamp(System.currentTimeMillis());
+	}
 
 	private static EntityManagerFactory factory = null;
 

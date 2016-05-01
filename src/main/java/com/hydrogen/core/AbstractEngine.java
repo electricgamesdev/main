@@ -35,7 +35,7 @@ public abstract class AbstractEngine implements Engine {
 	public void writeCode(String filename, String content) {
 
 		try {
-			File f=context.getFileToCreate(filename);
+			File f=context.getFileToCreate(getName()+File.separator+filename);
 			FileUtils.writeStringToFile(f, content);
 			context.log("Created "+f);
 		} catch (IOException e) {
